@@ -1,15 +1,13 @@
-
 /**
- * A "virtual" screen, where only "setPixel" is available
- * (It is a JFrame, and JFrame.EXIT_ON_CLOSE is set)
+ * A "virtual" screen, where only "setPixel" is available (It is a JFrame, and JFrame.EXIT_ON_CLOSE
+ * is set)
+ *
  * @author smondet
  */
-
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import javax.swing.*;
-import java.lang.Math;
 
 class ImageComponent extends Component {
 
@@ -31,7 +29,6 @@ class ImageComponent extends Component {
       ((Graphics2D) g).drawImage(renderedImage, new AffineTransform(1f, 0f, 0f, 1f, 0, 0), null);
     }
   }
-
 }
 
 public class GraphicsWrapper {
@@ -48,9 +45,11 @@ public class GraphicsWrapper {
   private BufferedImage frontBuffer = null;
 
   private void init() {
-    backBuffer = new BufferedImage(width * pixelSize, height * pixelSize, BufferedImage.TYPE_INT_ARGB);
+    backBuffer =
+        new BufferedImage(width * pixelSize, height * pixelSize, BufferedImage.TYPE_INT_ARGB);
 
-    frontBuffer = new BufferedImage(width * pixelSize, height * pixelSize, BufferedImage.TYPE_3BYTE_BGR);
+    frontBuffer =
+        new BufferedImage(width * pixelSize, height * pixelSize, BufferedImage.TYPE_3BYTE_BGR);
 
     /*
      * Graphics2D gd = initial.createGraphics ();
@@ -72,10 +71,7 @@ public class GraphicsWrapper {
     myFrame.setVisible(true);
   }
 
-  /**
-   * Build a virtual screen of size width x height
-   * And set its window visible.
-   */
+  /** Build a virtual screen of size width x height And set its window visible. */
   public GraphicsWrapper(int width, int height) {
     this.height = height;
     this.width = width;
@@ -84,10 +80,8 @@ public class GraphicsWrapper {
   }
 
   /**
-   * Build a virtual screen of size width x height, where one virtual pixel is
-   * represented by
-   * a pixelSize x pixelSize square.
-   * And set its window visible.
+   * Build a virtual screen of size width x height, where one virtual pixel is represented by a
+   * pixelSize x pixelSize square. And set its window visible.
    */
   public GraphicsWrapper(int width, int height, int pixelSize) {
     this.height = height;
@@ -97,9 +91,8 @@ public class GraphicsWrapper {
   }
 
   /**
-   * Lights the pixel (x,y) with color (r, g, b) (values clamped to [0,1])
-   * on the current draw buffer.
-   * Does nothing for pixels out of the screen.
+   * Lights the pixel (x,y) with color (r, g, b) (values clamped to [0,1]) on the current draw
+   * buffer. Does nothing for pixels out of the screen.
    */
   public void setPixel(int x, int y, double r, double g, double b) {
 
@@ -111,9 +104,8 @@ public class GraphicsWrapper {
   }
 
   /**
-   * Lights the pixel (x,y) with color (r, g, b) (values clamped to [0, 255])
-   * on the current draw buffer.
-   * Does nothing for pixels out of the screen.
+   * Lights the pixel (x,y) with color (r, g, b) (values clamped to [0, 255]) on the current draw
+   * buffer. Does nothing for pixels out of the screen.
    */
   public void setPixel(int x, int y, char r, char g, char b) {
 
@@ -131,10 +123,7 @@ public class GraphicsWrapper {
     }
   }
 
-  /**
-   * Lights the pixel (x,y) with the given color.
-   * Does nothing for pixels out of the screen.
-   */
+  /** Lights the pixel (x,y) with the given color. Does nothing for pixels out of the screen. */
   public void setPixel(int x, int y, Color color) {
 
     if ((x >= 0) && (x < width) && (y >= 0) && (y < height)) {
@@ -147,9 +136,7 @@ public class GraphicsWrapper {
     }
   }
 
-  /**
-   * Gets the pixel in the back buffer
-   */
+  /** Gets the pixel in the back buffer */
   public Color getPixel(int x, int y) {
     Color color;
 
@@ -174,9 +161,7 @@ public class GraphicsWrapper {
     return color;
   }
 
-  /**
-   *
-   */
+  /** */
   int getWidth() {
     return width;
   }
@@ -185,30 +170,21 @@ public class GraphicsWrapper {
     return height;
   }
 
-  /**
-   * Clear current draw-buffer (ie Paint it black)
-   *
-   */
+  /** Clear current draw-buffer (ie Paint it black) */
   public void clearBuffer() {
     Graphics2D gd = backBuffer.createGraphics();
     gd.setColor(Color.BLACK);
     gd.fillRect(0, 0, width * pixelSize, height * pixelSize);
   }
 
-  /**
-   * Draw current draw-buffer on the window.
-   *
-   */
+  /** Draw current draw-buffer on the window. */
   public void swapBuffers() {
     frontBuffer = drawComp.swapImage(backBuffer);
     myFrame.repaint();
   }
 
-  /**
-   * Destroy window.
-   */
+  /** Destroy window. */
   public void destroy() {
     myFrame.dispose();
   }
-
 }

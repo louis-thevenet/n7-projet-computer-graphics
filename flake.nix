@@ -16,13 +16,12 @@
         inputs.treefmt-nix.flakeModule
       ];
       perSystem =
-        {
-          config,
-          self',
-          pkgs,
-          lib,
-          system,
-          ...
+        { config
+        , self'
+        , pkgs
+        , lib
+        , system
+        , ...
         }:
         let
           buildInputs = with pkgs; [ ];
