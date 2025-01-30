@@ -64,15 +64,21 @@ public class Transformation {
     System.out.println("Modelview matrix:\n" + worldToCamera);
   }
 
-  public void setProjection() {
-    // TODO
+  public void setProjection() throws InstantiationException, SizeMismatchException {
+    for (int i = 0; i < 3; i++) {
+      projection.set(i, i, 1.0);
+    }
 
     System.out.println("Projection matrix:\n" + projection);
   }
 
   public void setCalibration(double focal, double width, double height) {
 
-    // TODO
+    calibration.set(0, 0, focal);
+    calibration.set(1, 1, focal);
+    calibration.set(2, 2, 1.0);
+    calibration.set(0, 2, width / 2);
+    calibration.set(1, 2, height / 2);
 
     System.out.println("Calibration matrix:\n" + calibration);
   }
@@ -84,8 +90,15 @@ public class Transformation {
    */
   public Vector3 projectPoint(Vector p)
       throws SizeMismatchException, InstantiationException {
-    Vector ps = new Vector(3);
-    // TODO
+
+    var ps = worldToCamera.multiply(p);
+    ps = projection.multiply(p);
+    ps = calibration.multiply(ps);
+
+    ps.set(0, ps.get(0) / ps.get(2));
+    ps.set(1, ps.get(1) / ps.get(2));
+    ps.set(2, ps.get(2) / ps.get(2));
+    ps.set(2, p.get(2));
 
     return new Vector3(ps);
   }
