@@ -1,6 +1,9 @@
+
 import algebra.*;
 
-/** author: cdehais */
+/**
+ * author: cdehais
+ */
 public class Transformation {
 
   Matrix worldToCamera;
@@ -20,10 +23,39 @@ public class Transformation {
   public void setLookAt(Vector3 eye, Vector3 interestPoint, Vector3 up) {
     try {
       // compute rotation
-      // TODO
+      Vector3 w = interestPoint;
+      w.setName("w");
+      w.subtract(eye);
+      w.normalize();
+
+      // Vector3 u = w;
+      var u = up.cross(w);
+      u.setName("u");
+      u.normalize();
+
+      // var v = w;
+      var v = w.cross(u);
+      v.setName("v");
+
+      var R = Matrix.createIdentity(3);
+      R.setName("R");
+      R.setCol(0, u);
+      R.setCol(1, v);
+      R.setCol(2, w);
+      R = R.transpose();
 
       // compute translation
-      // TODO
+      var T = R.multiply(eye);
+      T.scale(-1f);
+
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          worldToCamera.set(i, j, R.get(i, j));
+        }
+      }
+      for (int i = 0; i < 3; i++) {
+        worldToCamera.set(i, 3, T.get(i));
+      }
 
     } catch (Exception e) {
       /* unreached */ }
@@ -46,22 +78,27 @@ public class Transformation {
   }
 
   /**
-   * Projects the given homogeneous, 4 dimensional point onto the screen. The resulting Vector as
-   * its (x,y) coordinates in pixel, and its z coordinate is the depth of the point in the camera
-   * coordinate system.
+   * Projects the given homogeneous, 4 dimensional point onto the screen.
+   * The resulting Vector as its (x,y) coordinates in pixel, and its z coordinate
+   * is the depth of the point in the camera coordinate system.
    */
-  public Vector3 projectPoint(Vector p) throws SizeMismatchException, InstantiationException {
+  public Vector3 projectPoint(Vector p)
+      throws SizeMismatchException, InstantiationException {
     Vector ps = new Vector(3);
     // TODO
 
     return new Vector3(ps);
   }
 
-  /** Transform a vector from world to camera coordinates. */
-  public Vector3 transformVector(Vector3 v) throws SizeMismatchException, InstantiationException {
+  /**
+   * Transform a vector from world to camera coordinates.
+   */
+  public Vector3 transformVector(Vector3 v)
+      throws SizeMismatchException, InstantiationException {
     // Doing nothing special here because there is no scaling
     Matrix R = worldToCamera.getSubMatrix(0, 0, 3, 3);
     Vector tv = R.multiply(v);
     return new Vector3(tv);
   }
+
 }
