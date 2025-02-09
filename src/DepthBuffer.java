@@ -32,6 +32,9 @@ public class DepthBuffer {
         && (fragment.getY() < height)) {
       // return false;
       // TODO
+      if (fragment.getDepth() <= buffer[fragment.getY() * width + fragment.getX()]) {
+        return true;
+      }
       return false;
     } else {
       return false;
@@ -44,7 +47,7 @@ public class DepthBuffer {
         && (fragment.getX() < width)
         && (fragment.getY() >= 0)
         && (fragment.getY() < height)) {
-      // TODO
+      buffer[fragment.getY() * width + fragment.getX()] = fragment.getDepth();
     }
   }
 }
