@@ -177,31 +177,6 @@ public class Rasterizer {
     return C;
   }
 
-  /** Linear interpolation of a Fragment f on the edge defined by Fragment's v1 and v2 */
-  private void interpolate3(Fragment v1, Fragment v2, Fragment v3, Fragment f) {
-    int x1 = v1.getX();
-    int y1 = v1.getY();
-    int x2 = v2.getX();
-    int y2 = v2.getY();
-    int x = f.getX();
-    int y = f.getX();
-
-    double alpha;
-    if (Math.abs(x2 - x1) > Math.abs(y2 - y1)) {
-      alpha = (double) (x - x1) / (double) (x2 - x1);
-    } else {
-      if (y2 != y1) {
-        alpha = (double) (y - y1) / (double) (y2 - y1);
-      } else {
-        alpha = 0.5;
-      }
-    }
-    int numAttributes = f.getNumAttributes();
-    for (int i = 0; i < numAttributes; i++) {
-      f.setAttribute(i, (1.0 - alpha) * v1.getAttribute(i) + alpha * v2.getAttribute(i));
-    }
-  }
-
   /** Rasterizes the triangular face made of the Fragment v1, v2 and v3 */
   public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3) {
 
