@@ -1,4 +1,3 @@
-
 /** The DepthBuffer class implements a DepthBuffer and its pass test. */
 public class DepthBuffer {
   private double[] buffer;

@@ -23,7 +23,7 @@ public class Renderer {
     screen = new GraphicsWrapper(scene.getScreenW(), scene.getScreenH());
     screen.clearBuffer();
     shader = new SimpleShader(screen);
-    //         shader = new PainterShader(screen);
+    // shader = new PainterShader(screen);
     rasterizer = new Rasterizer(shader);
     // rasterizer = new PerspectiveCorrectRasterizer (shader);
 
@@ -154,39 +154,39 @@ public class Renderer {
     wait(3);
 
     // solid rendering, no lighting
-    //         screen.clearBuffer();
-    //         shader.reset();
-    //         renderSolid();
-    //         screen.swapBuffers();
-    //         wait(3);
+    screen.clearBuffer();
+    shader.reset();
+    renderSolid();
+    screen.swapBuffers();
+    wait(3);
 
     // solid rendering, with lighting
-    //         screen.clearBuffer();
-    //         shader.reset();
-    //         setLightingEnabled(true);
-    //         renderSolid();
-    //         screen.swapBuffers();
-    //         wait(3);
+    // screen.clearBuffer();
+    // shader.reset();
+    // setLightingEnabled(true);
+    // renderSolid();
+    // screen.swapBuffers();
+    // wait(3);
 
     // solid rendering, with texture
-    //         screen.clearBuffer();
-    //         TextureShader texShader = new TextureShader(screen);
-    //         texShader.setTexture("data/brick.jpg");
-    //         shader = texShader;
-    //         rasterizer.setShader(texShader);
-    //         setLightingEnabled(true);
-    //         renderSolid();
-    //         screen.swapBuffers();
-    //         wait(3);
+    // screen.clearBuffer();
+    // TextureShader texShader = new TextureShader(screen);
+    // texShader.setTexture("data/brick.jpg");
+    // shader = texShader;
+    // rasterizer.setShader(texShader);
+    // setLightingEnabled(true);
+    // renderSolid();
+    // screen.swapBuffers();
+    // wait(3);
 
     // solid rendering, with texture combined with base color
-    //         screen.clearBuffer();
-    //         texShader.reset();
-    //         texShader.setCombineWithBaseColor(true);
-    //         shader = texShader;
-    //         renderSolid();
-    //         screen.swapBuffers();
-    //         wait(3);
+    // screen.clearBuffer();
+    // texShader.reset();
+    // texShader.setCombineWithBaseColor(true);
+    // shader = texShader;
+    // renderSolid();
+    // screen.swapBuffers();
+    // wait(3);
 
     screen.destroy();
     System.exit(0);

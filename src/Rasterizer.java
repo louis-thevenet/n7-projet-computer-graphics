@@ -1,3 +1,4 @@
+
 import algebra.*;
 
 /**
@@ -75,69 +76,69 @@ public class Rasterizer {
     }
 
     // Uncomment the following block of code for drawing the wireframe
-    //         // int numAttributes = v1.getNumAttributes ();
-    //         Fragment fragment = new Fragment(0, 0); // , numAttributes);
-    //
-    //         boolean sym = (Math.abs(y2 - y1) > Math.abs(x2 - x1));
-    //         if (sym) {
-    //             int temp;
-    //             temp = x1;
-    //             x1 = y1;
-    //             y1 = temp;
-    //             temp = x2;
-    //             x2 = y2;
-    //             y2 = temp;
-    //             // swapXAndY (v1);
-    //             // swapXAndY (v2);
-    //         }
-    //         if (x1 > x2) {
-    //             Fragment ftemp;
-    //             int temp;
-    //             temp = x1;
-    //             x1 = x2;
-    //             x2 = temp;
-    //             temp = y1;
-    //             y1 = y2;
-    //             y2 = temp;
-    //             ftemp = v1;
-    //             v1 = v2;
-    //             v2 = ftemp;
-    //         }
-    //
-    //         int ystep;
-    //         if (y1 < y2) {
-    //             ystep = 1;
-    //         } else {
-    //             ystep = -1;
-    //         }
-    //
-    //         int err = (x1 - x2) / 2;
-    //         int dx = (x2 - x1);
-    //         int dy = Math.abs(y2 - y1);
-    //
-    //         int x = x1;
-    //         int y = y1;
-    //
-    //         while (x <= x2) {
-    //
-    //             fragment.setPosition(x, y);
-    //
-    //             if (!shader.isClipped(fragment)) {
-    //
-    //                 interpolate2(v1, v2, fragment);
-    //                 if (sym) {
-    //                     swapXAndY(fragment);
-    //                 }
-    //                 shader.shade(fragment);
-    //             }
-    //
-    //             x += 1;
-    //             err = err + dy;
-    //             if (err > 0) {
-    //                 y += ystep;
-    //                 err -= dx;
-    //             }
-    //         }
+    // int numAttributes = v1.getNumAttributes ();
+    Fragment fragment = new Fragment(0, 0); // , numAttributes);
+
+    boolean sym = (Math.abs(y2 - y1) > Math.abs(x2 - x1));
+    if (sym) {
+      int temp;
+      temp = x1;
+      x1 = y1;
+      y1 = temp;
+      temp = x2;
+      x2 = y2;
+      y2 = temp;
+      // swapXAndY (v1);
+      // swapXAndY (v2);
+    }
+    if (x1 > x2) {
+      Fragment ftemp;
+      int temp;
+      temp = x1;
+      x1 = x2;
+      x2 = temp;
+      temp = y1;
+      y1 = y2;
+      y2 = temp;
+      ftemp = v1;
+      v1 = v2;
+      v2 = ftemp;
+    }
+
+    int ystep;
+    if (y1 < y2) {
+      ystep = 1;
+    } else {
+      ystep = -1;
+    }
+
+    int err = (x1 - x2) / 2;
+    int dx = (x2 - x1);
+    int dy = Math.abs(y2 - y1);
+
+    int x = x1;
+    int y = y1;
+
+    while (x <= x2) {
+
+      fragment.setPosition(x, y);
+
+      if (!shader.isClipped(fragment)) {
+
+        interpolate2(v1, v2, fragment);
+        if (sym) {
+          swapXAndY(fragment);
+        }
+        shader.shade(fragment);
+      }
+
+      x += 1;
+      err = err + dy;
+      if (err > 0) {
+        y += ystep;
+        err -= dx;
+      }
+    }
   }
 
   static double triangleArea(Fragment v1, Fragment v2, Fragment v3) {
@@ -177,6 +178,31 @@ public class Rasterizer {
     return C;
   }
 
+  /** Linear interpolation of a Fragment f on the edge defined by Fragment's v1 and v2 */
+  private void interpolate3(Fragment v1, Fragment v2, Fragment v3, Fragment f) {
+    int x1 = v1.getX();
+    int y1 = v1.getY();
+    int x2 = v2.getX();
+    int y2 = v2.getY();
+    int x = f.getX();
+    int y = f.getX();
+
+    double alpha;
+    if (Math.abs(x2 - x1) > Math.abs(y2 - y1)) {
+      alpha = (double) (x - x1) / (double) (x2 - x1);
+    } else {
+      if (y2 != y1) {
+        alpha = (double) (y - y1) / (double) (y2 - y1);
+      } else {
+        alpha = 0.5;
+      }
+    }
+    int numAttributes = f.getNumAttributes();
+    for (int i = 0; i < numAttributes; i++) {
+      f.setAttribute(i, (1.0 - alpha) * v1.getAttribute(i) + alpha * v2.getAttribute(i));
+    }
+  }
+
   /** Rasterizes the triangular face made of the Fragment v1, v2 and v3 */
   public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3) {
 
@@ -185,5 +211,57 @@ public class Rasterizer {
     // iterate over the triangle's bounding box
     // TODO
 
+    try {
+
+      int x1 = v1.getX();
+      int y1 = v1.getY();
+      int x2 = v2.getX();
+      int y2 = v2.getY();
+      int x3 = v3.getX();
+      int y3 = v3.getY();
+
+      int xmin = Math.min(x1, Math.min(x2, x3));
+      int ymin = Math.min(y1, Math.min(y2, y3));
+
+      int xmax = Math.max(x1, Math.max(x2, x3));
+      int ymax = Math.max(y1, Math.max(y2, y3));
+
+      for (int x = xmin; x <= xmax; x++) {
+        for (int y = ymin; y <= ymax; y++) {
+
+          var v = new Vector(3);
+          v.set(0, 1);
+          v.set(1, x);
+          v.set(2, y);
+
+          Vector abg = C.multiply(v);
+          double a = abg.get(0);
+          double b = abg.get(1);
+          double g = abg.get(2);
+
+          if (a >= 0 && b >= 0 && g >= 0) {
+            Fragment p = new Fragment(x, y);
+
+            double alpha;
+            if (Math.abs(x2 - x1) > Math.abs(y2 - y1)) {
+              alpha = (double) (x - x1) / (double) (x2 - x1);
+            } else {
+              if (y2 != y1) {
+                alpha = (double) (y - y1) / (double) (y2 - y1);
+              } else {
+                alpha = 0.5;
+              }
+            }
+            int numAttributes = p.getNumAttributes();
+            for (int i = 0; i < numAttributes; i++) {
+              p.setAttribute(i, (1.0 - alpha) * v1.getAttribute(i) + alpha * v2.getAttribute(i));
+            }
+          }
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

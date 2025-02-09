@@ -4,7 +4,6 @@
  */
 package algebra;
 
-
 public class Vector implements Cloneable {
 
   protected int size;
