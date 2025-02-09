@@ -1,4 +1,3 @@
-
 import algebra.*;
 
 /**
@@ -242,19 +241,11 @@ public class Rasterizer {
           if (a >= 0 && b >= 0 && g >= 0) {
             Fragment p = new Fragment(x, y);
 
-            double alpha;
-            if (Math.abs(x2 - x1) > Math.abs(y2 - y1)) {
-              alpha = (double) (x - x1) / (double) (x2 - x1);
-            } else {
-              if (y2 != y1) {
-                alpha = (double) (y - y1) / (double) (y2 - y1);
-              } else {
-                alpha = 0.5;
-              }
-            }
             int numAttributes = p.getNumAttributes();
             for (int i = 0; i < numAttributes; i++) {
-              p.setAttribute(i, (1.0 - alpha) * v1.getAttribute(i) + alpha * v2.getAttribute(i));
+              p.setAttribute(
+                  i, a * v1.getAttribute(i) + b * v2.getAttribute(i) + g * v3.getAttribute(i));
+              shader.shade(p);
             }
           }
         }
