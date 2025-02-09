@@ -154,19 +154,19 @@ public class Renderer {
     wait(3);
 
     // solid rendering, no lighting
-    screen.clearBuffer();
-    shader.reset();
-    renderSolid();
-    screen.swapBuffers();
-    wait(3);
-
-    // solid rendering, with lighting
     // screen.clearBuffer();
     // shader.reset();
-    // setLightingEnabled(true);
     // renderSolid();
     // screen.swapBuffers();
     // wait(3);
+
+    // solid rendering, with lighting
+    screen.clearBuffer();
+    shader.reset();
+    setLightingEnabled(true);
+    renderSolid();
+    screen.swapBuffers();
+    wait(3);
 
     // solid rendering, with texture
     // screen.clearBuffer();
