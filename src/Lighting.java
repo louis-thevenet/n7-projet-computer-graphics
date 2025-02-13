@@ -93,11 +93,11 @@ public class Lighting {
 
             // diffuse contribution
             // TODO
-            double I_diffuse = light.params[3] * kd * (normal.cross(l).norm());
+            double I_diffuse = light.params[3] * kd * (normal.dot(l))/(normal.norm()*l.norm());
 
             // specular contribution
             // TODO
-            double I_specular = light.params[3] * ks * (h.cross(normal).norm());
+            double I_specular = light.params[3] * ks * (Math.pow(h.dot(normal),s))/(normal.norm()*h.norm());
             I += I_diffuse + I_specular;
 
           } catch (InstantiationException ex) {

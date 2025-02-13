@@ -26,19 +26,12 @@ public class DepthBuffer {
    * position.
    */
   public boolean testFragment(Fragment fragment) {
-    if ((fragment.getX() >= 0)
+    return ((fragment.getX() >= 0)
         && (fragment.getX() < width)
         && (fragment.getY() >= 0)
-        && (fragment.getY() < height)) {
-      // return false;
-      // TODO
-      if (fragment.getDepth() <= buffer[fragment.getY() * width + fragment.getX()]) {
-        return true;
-      }
-      return false;
-    } else {
-      return false;
-    }
+        && (fragment.getY() < height)
+        && fragment.getDepth() <= buffer[fragment.getY() * width + fragment.getX()]);
+
   }
 
   /** Writes the fragment depth to the buffer */

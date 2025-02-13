@@ -110,7 +110,17 @@ public class Mesh {
     try {
       for (int i = 0; i < 3 * getNumFaces(); i += 3) {
         // TODO
-        Vector3 n = new Vector3();
+        Vector3 q = new Vector3(vertices[faces[i]].get(0), vertices[faces[i]].get(1), vertices[faces[i]].get(2));
+        Vector3 r = new Vector3(vertices[faces[i+1]].get(0), vertices[faces[i+1]].get(1), vertices[faces[i+1]].get(2));
+        Vector3 s = new Vector3(vertices[faces[i+2]].get(0), vertices[faces[i+2]].get(1), vertices[faces[i+2]].get(2));
+
+        Vector3 qr =r;
+        qr.subtract(q);
+
+        Vector3 qs = s;
+        qs.subtract(q);
+
+        Vector3 n = qr.cross(qs);
 
         // add the calculated normal n to each vertex of the face
         for (int j = 0; j < 3; j++) {
@@ -119,6 +129,7 @@ public class Mesh {
           if (nj == null) {
             normals[faces[i + j]] = new Vector3(n);
             normals[faces[i + j]].setName("n" + faces[i + j]);
+
           } else {
             nj.add(n);
           }

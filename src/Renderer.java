@@ -24,8 +24,8 @@ public class Renderer {
     screen.clearBuffer();
     // shader = new SimpleShader(screen);
     shader = new PainterShader(screen);
-    rasterizer = new Rasterizer(shader);
-    // rasterizer = new PerspectiveCorrectRasterizer (shader);
+   // rasterizer = new Rasterizer(shader);
+     rasterizer = new PerspectiveCorrectRasterizer (shader);
 
     xform = new Transformation();
     xform.setLookAt(scene.getCameraPosition(), scene.getCameraLookAt(), scene.getCameraUp());
@@ -153,31 +153,31 @@ public class Renderer {
     screen.swapBuffers();
     wait(3);
 
-    // solid rendering, no lighting
+    // // solid rendering, no lighting
     // screen.clearBuffer();
     // shader.reset();
     // renderSolid();
     // screen.swapBuffers();
     // wait(3);
 
-    // solid rendering, with lighting
-    screen.clearBuffer();
-    shader.reset();
-    setLightingEnabled(true);
-    renderSolid();
-    screen.swapBuffers();
-    wait(3);
-
-    // solid rendering, with texture
+    // // solid rendering, with lighting
     // screen.clearBuffer();
-    // TextureShader texShader = new TextureShader(screen);
-    // texShader.setTexture("data/brick.jpg");
-    // shader = texShader;
-    // rasterizer.setShader(texShader);
+    // shader.reset();
     // setLightingEnabled(true);
     // renderSolid();
     // screen.swapBuffers();
     // wait(3);
+
+    // solid rendering, with texture
+    screen.clearBuffer();
+    TextureShader texShader = new TextureShader(screen);
+    texShader.setTexture("data/brick.jpg");
+    shader = texShader;
+    rasterizer.setShader(texShader);
+    setLightingEnabled(true);
+    renderSolid();
+    screen.swapBuffers();
+    wait(3);
 
     // solid rendering, with texture combined with base color
     // screen.clearBuffer();

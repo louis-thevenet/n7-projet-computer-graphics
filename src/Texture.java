@@ -22,7 +22,15 @@ public class Texture {
    */
   public Color sample(double u, double v) {
     // TODO
+    int x = (int)(u * width) % width;
+    int y = (int)(v * height) % height;
 
-    return new Color(0, 0, 0);
+    int color = image.getRGB(x, y);
+
+    int b = color & 0xff;
+    int g = (color & 0xff00) >> 8;
+    int r = (color & 0xff0000) >> 16;
+
+    return new Color(r,g,b);
   }
 }

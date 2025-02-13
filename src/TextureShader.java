@@ -1,4 +1,3 @@
-import java.awt.*;
 
 /**
  * Simple shader that just copy the interpolated color to the screen, taking the depth of the
@@ -36,7 +35,9 @@ public class TextureShader extends Shader {
     if (depth.testFragment(fragment)) {
       // The Fragment may not have texture coordinates
       try {
-        // TODO
+        double u = fragment.getAttribute(7);
+        double v  = fragment.getAttribute(8);
+        screen.setPixel(fragment.getX(), fragment.getY(), texture.sample(u, v));
 
       } catch (ArrayIndexOutOfBoundsException e) {
         screen.setPixel(fragment.getX(), fragment.getY(), fragment.getColor());
