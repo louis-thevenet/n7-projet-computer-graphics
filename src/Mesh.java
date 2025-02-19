@@ -2,7 +2,8 @@ import algebra.*;
 import java.io.*;
 
 /**
- * Defines a triangle based mesh. A mesh is constructed by interpreting the data given in an OFF
+ * Defines a triangle based mesh. A mesh is constructed by interpreting the data
+ * given in an OFF
  * file.
  *
  * @author smondet gg cdehais
@@ -25,7 +26,8 @@ public class Mesh {
   }
 
   /**
-   * Builds a Mesh object by reading in an OFF file. Does not support non triangular meshes.
+   * Builds a Mesh object by reading in an OFF file. Does not support non
+   * triangular meshes.
    *
    * @filename path to OFF file.
    */
@@ -111,10 +113,12 @@ public class Mesh {
       for (int i = 0; i < 3 * getNumFaces(); i += 3) {
         // TODO
         Vector3 q = new Vector3(vertices[faces[i]].get(0), vertices[faces[i]].get(1), vertices[faces[i]].get(2));
-        Vector3 r = new Vector3(vertices[faces[i+1]].get(0), vertices[faces[i+1]].get(1), vertices[faces[i+1]].get(2));
-        Vector3 s = new Vector3(vertices[faces[i+2]].get(0), vertices[faces[i+2]].get(1), vertices[faces[i+2]].get(2));
+        Vector3 r = new Vector3(vertices[faces[i + 1]].get(0), vertices[faces[i + 1]].get(1),
+            vertices[faces[i + 1]].get(2));
+        Vector3 s = new Vector3(vertices[faces[i + 2]].get(0), vertices[faces[i + 2]].get(1),
+            vertices[faces[i + 2]].get(2));
 
-        Vector3 qr =r;
+        Vector3 qr = r;
         qr.subtract(q);
 
         Vector3 qs = s;
@@ -169,7 +173,8 @@ public class Mesh {
   }
 
   /**
-   * Returns the faces of the mesh. The returned array contains 3*n integers, with n the number of
+   * Returns the faces of the mesh. The returned array contains 3*n integers, with
+   * n the number of
    * faces. Each integer is an index into the array of Vector.
    */
   public int[] getFaces() {

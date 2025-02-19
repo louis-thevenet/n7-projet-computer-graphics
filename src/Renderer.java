@@ -1,7 +1,8 @@
 import algebra.*;
 
 /**
- * The Renderer class drives the rendering pipeline: read in a scene, projects the vertices and
+ * The Renderer class drives the rendering pipeline: read in a scene, projects
+ * the vertices and
  * rasterizes every faces / edges.
  *
  * @author: cdehais
@@ -16,6 +17,7 @@ public class Renderer {
   static Transformation xform;
   static Lighting lighting;
   static boolean lightingEnabled;
+  static boolean usePhong;
 
   static void init(String sceneFilename) throws Exception {
     scene = new Scene(sceneFilename);
@@ -24,8 +26,8 @@ public class Renderer {
     screen.clearBuffer();
     // shader = new SimpleShader(screen);
     shader = new PainterShader(screen);
-   // rasterizer = new Rasterizer(shader);
-     rasterizer = new PerspectiveCorrectRasterizer (shader);
+    // rasterizer = new Rasterizer(shader);
+    rasterizer = new PerspectiveCorrectRasterizer(shader);
 
     xform = new Transformation();
     xform.setLookAt(scene.getCameraPosition(), scene.getCameraLookAt(), scene.getCameraUp());
@@ -71,16 +73,29 @@ public class Renderer {
           color[1] = colors[3 * i + 1];
           color[2] = colors[3 * i + 2];
           double material[] = scene.getMaterial();
-          double[] litColor =
-              lighting.applyLights(
-                  new Vector3(vertices[i]),
-                  pNormal,
-                  color,
-                  scene.getCameraPosition(),
-                  material[0],
-                  material[1],
-                  material[2],
-                  material[3]);
+
+          double[] litColor;
+          if (usePhong) {
+            litColor = lighting.applyLightsGouraud(
+                new Vector3(vertices[i]),
+                pNormal,
+                color,
+                scene.getCameraPosition(),
+                material[0],
+                material[1],
+                material[2],
+                material[3]);
+          } else {
+            litColor = lighting.applyLightsPhong(
+                new Vector3(vertices[i]),
+                pNormal,
+                color,
+                scene.getCameraPosition(),
+                material[0],
+                material[1],
+                material[2],
+                material[3]);
+          }
           fragments[i].setColor(litColor[0], litColor[1], litColor[2]);
         }
       }
@@ -125,6 +140,10 @@ public class Renderer {
     lightingEnabled = enabled;
   }
 
+  public static void setusePhong(boolean enabled) {
+    usePhong = enabled;
+  }
+
   public static void wait(int sec) {
     try {
       Thread.sleep(sec * 1000);
@@ -148,10 +167,10 @@ public class Renderer {
       }
     }
 
-    // wireframe rendering
-    renderWireframe();
-    screen.swapBuffers();
-    wait(3);
+    // // wireframe rendering
+    // renderWireframe();
+    // screen.swapBuffers();
+    // wait(3);
 
     // // solid rendering, no lighting
     // screen.clearBuffer();
@@ -160,26 +179,37 @@ public class Renderer {
     // screen.swapBuffers();
     // wait(3);
 
-    // // solid rendering, with lighting
-    // screen.clearBuffer();
-    // shader.reset();
-    // setLightingEnabled(true);
-    // renderSolid();
-    // screen.swapBuffers();
-    // wait(3);
-
-    // solid rendering, with texture
+    // solid rendering, with phong lighting
     screen.clearBuffer();
-    TextureShader texShader = new TextureShader(screen);
-    texShader.setTexture("data/brick.jpg");
-    shader = texShader;
-    rasterizer.setShader(texShader);
+    shader.reset();
     setLightingEnabled(true);
     renderSolid();
     screen.swapBuffers();
     wait(3);
 
-    // solid rendering, with texture combined with base color
+    // solid rendering, with phong lighting
+    System.out.println("Phong shading");
+
+    screen.clearBuffer();
+    shader.reset();
+    setLightingEnabled(true);
+    setusePhong(true);
+    renderSolid();
+    screen.swapBuffers();
+    wait(3);
+
+    // // solid rendering, with texture
+    // screen.clearBuffer();
+    // TextureShader texShader = new TextureShader(screen);
+    // texShader.setTexture("data/brick.jpg");
+    // shader = texShader;
+    // rasterizer.setShader(texShader);
+    // setLightingEnabled(true);
+    // renderSolid();
+    // screen.swapBuffers();
+    // wait(3);
+
+    // // solid rendering, with texture combined with base color
     // screen.clearBuffer();
     // texShader.reset();
     // texShader.setCombineWithBaseColor(true);

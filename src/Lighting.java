@@ -47,10 +47,11 @@ public class Lighting {
   }
 
   /**
-   * Computes the illuminated color of a 3D points of given position, normal and color, and given
+   * Computes the illuminated color of a 3D points of given position, normal and
+   * color, and given
    * the camera position and material parameters. Returns an array of size 3.
    */
-  public double[] applyLights(
+  public double[] applyLightsGouraud(
       Vector3 position,
       Vector3 normal,
       double[] color,
@@ -70,7 +71,6 @@ public class Lighting {
       switch (light.type) {
         case AMBIENT:
           // ambient light contribution
-          // TODO
           I += light.params[0] * ka;
           break;
 
@@ -92,12 +92,10 @@ public class Lighting {
             h.normalize();
 
             // diffuse contribution
-            // TODO
-            double I_diffuse = light.params[3] * kd * (normal.dot(l))/(normal.norm()*l.norm());
+            double I_diffuse = light.params[3] * kd * (normal.dot(l)) / (normal.norm() * l.norm());
 
             // specular contribution
-            // TODO
-            double I_specular = light.params[3] * ks * (Math.pow(h.dot(normal),s))/(normal.norm()*h.norm());
+            double I_specular = light.params[3] * ks * (Math.pow(h.dot(normal), s)) / (normal.norm() * h.norm());
             I += I_diffuse + I_specular;
 
           } catch (InstantiationException ex) {
@@ -117,4 +115,65 @@ public class Lighting {
 
     return litColor;
   }
+
+  public double[] applyLightsPhong(Vector3 position,
+      Vector3 normal,
+      double[] color,
+      Vector3 cameraPosition,
+      double ka,
+      double kd,
+      double ks,
+      double s) {
+    double[] litColor = new double[3];
+
+    // Add ambient light
+    for (Light light : lights) {
+      if (light.type == AMBIENT) {
+        litColor[0] += light.params[0] * ka * color[0];
+        litColor[1] += light.params[0] * ka * color[1];
+        litColor[2] += light.params[0] * ka * color[2];
+      }
+    }
+
+    for (Light light : lights) {
+      if (light.type == POINT) {
+        try {
+          // vector from point to light
+          Vector3 l = new Vector3(light.params[0], light.params[1], light.params[2]);
+          l.subtract(position);
+          l.normalize();
+
+          // vector from point to camera center
+          Vector3 v = new Vector3(cameraPosition);
+          v.subtract(position);
+          v.normalize();
+
+          // reflection vector
+          Vector3 r = new Vector3(normal);
+          r.scale(2 * normal.dot(l));
+          r.subtract(l);
+          r.normalize();
+
+          // diffuse contribution
+          double I_diffuse = light.params[3] * kd * Math.max(0, normal.dot(l));
+
+          // specular contribution
+          double I_specular = light.params[3] * ks * Math.pow(Math.max(0, r.dot(v)), s);
+
+          litColor[0] += (I_diffuse + I_specular) * color[0];
+          litColor[1] += (I_diffuse + I_specular) * color[1];
+          litColor[2] += (I_diffuse + I_specular) * color[2];
+
+        } catch (InstantiationException ex) {
+          /* should not reach */
+        } catch (SizeMismatchException ex) {
+          /* should not reach */
+        }
+      }
+    }
+
+    return litColor;
+
+  }
+
 }
