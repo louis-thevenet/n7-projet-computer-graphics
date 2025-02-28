@@ -17,7 +17,7 @@ public class Renderer {
   static Transformation xform;
   static Lighting lighting;
   static boolean lightingEnabled;
-  static boolean usePhong;
+  static boolean usePhong = false;
 
   static void init(String sceneFilename) throws Exception {
     scene = new Scene(sceneFilename);
@@ -75,7 +75,7 @@ public class Renderer {
           double material[] = scene.getMaterial();
 
           double[] litColor;
-          if (usePhong) {
+          if (!usePhong) {
             litColor = lighting.applyLightsGouraud(
                 new Vector3(vertices[i]),
                 pNormal,
@@ -85,18 +85,10 @@ public class Renderer {
                 material[1],
                 material[2],
                 material[3]);
+            fragments[i].setColor(litColor[0], litColor[1], litColor[2]);
           } else {
-            litColor = lighting.applyLightsPhong(
-                new Vector3(vertices[i]),
-                pNormal,
-                color,
-                scene.getCameraPosition(),
-                material[0],
-                material[1],
-                material[2],
-                material[3]);
+            fragments[i].setColor(color[0], color[1], color[2]);
           }
-          fragments[i].setColor(litColor[0], litColor[1], litColor[2]);
         }
       }
     } catch (SizeMismatchException e) {
@@ -132,7 +124,7 @@ public class Renderer {
       Fragment v2 = fragments[faces[i + 1]];
       Fragment v3 = fragments[faces[i + 2]];
 
-      rasterizer.rasterizeFace(v1, v2, v3);
+      rasterizer.rasterizeFace(v1, v2, v3, usePhong, lighting, scene);
     }
   }
 

@@ -126,12 +126,12 @@ public class Lighting {
       double s) {
     double[] litColor = new double[3];
 
+    double I = 0.0;
+
     // Add ambient light
     for (Light light : lights) {
       if (light.type == AMBIENT) {
-        litColor[0] += light.params[0] * ka * color[0];
-        litColor[1] += light.params[0] * ka * color[1];
-        litColor[2] += light.params[0] * ka * color[2];
+        I += light.params[0] * ka ;
       }
     }
 
@@ -143,7 +143,7 @@ public class Lighting {
           l.subtract(position);
           l.normalize();
 
-          // vector from point to camera center
+          // vector from point to camera center (eye) == vector V
           Vector3 v = new Vector3(cameraPosition);
           v.subtract(position);
           v.normalize();
@@ -160,9 +160,7 @@ public class Lighting {
           // specular contribution
           double I_specular = light.params[3] * ks * Math.pow(Math.max(0, r.dot(v)), s);
 
-          litColor[0] += (I_diffuse + I_specular) * color[0];
-          litColor[1] += (I_diffuse + I_specular) * color[1];
-          litColor[2] += (I_diffuse + I_specular) * color[2];
+          I+= (I_diffuse + I_specular);
 
         } catch (InstantiationException ex) {
           /* should not reach */
@@ -171,6 +169,10 @@ public class Lighting {
         }
       }
     }
+
+    litColor[0] = I*color[0];
+    litColor[1] = I*color[1];
+    litColor[2] = I*color[2];
 
     return litColor;
 

@@ -13,7 +13,7 @@ public class PerspectiveCorrectRasterizer extends Rasterizer {
   }
 
   /** Rasterizes the triangular face made of the Fragment v1, v2 and v3 */
-  public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3) {
+  public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3, boolean usePhong, Lighting lighting, Scene scene) {
     Matrix C = makeBarycentricCoordsMatrix(v1, v2, v3);
 
     // iterate over the triangle's bounding box
@@ -47,6 +47,29 @@ public class PerspectiveCorrectRasterizer extends Rasterizer {
 
                 fragment.setAttribute(i, aOverZ / oneOverZ);
               }
+              // Apply Phong lights on faces
+              if (usePhong) {
+                double[] litColor;
+                
+                // Normal is opposed and need to normalize
+                Vector3 n = fragment.getNormal();
+                n.normalize();
+                n.scale(-1);
+                fragment.setNormal(n);
+
+                litColor = lighting.applyLightsPhong(
+                  new Vector3(x, y, fragment.getDepth()),
+                  fragment.getNormal(),
+                  fragment.getAttribute(1, 3),
+                  scene.getCameraPosition(),
+                  scene.material[0],
+                  scene.getMaterial()[1],
+                  scene.getMaterial()[2],
+                  scene.getMaterial()[3]);
+                  fragment.setColor(litColor[0], litColor[1], litColor[2]);
+              }
+
+              
               shader.shade(fragment);
             }
           }

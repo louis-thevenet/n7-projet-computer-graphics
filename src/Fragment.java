@@ -85,7 +85,7 @@ public class Fragment {
   }
 
   public Vector3 getNormal() {
-    return new Vector3(attributes[0], attributes[1], attributes[2]);
+    return new Vector3(attributes[4], attributes[5], attributes[6]);
   }
 
   public void setNormal(Vector normal) {

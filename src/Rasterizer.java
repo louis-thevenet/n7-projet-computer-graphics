@@ -1,9 +1,12 @@
 import algebra.*;
 
 /**
- * The Rasterizer class is responsible for the discretization of geometric primitives (edges and
- * faces) over the screen pixel grid and generates Fragment (pixels with interpolated attributes).
- * Those Fragment are then passed to a Shader object, which will produce the final color of the
+ * The Rasterizer class is responsible for the discretization of geometric
+ * primitives (edges and
+ * faces) over the screen pixel grid and generates Fragment (pixels with
+ * interpolated attributes).
+ * Those Fragment are then passed to a Shader object, which will produce the
+ * final color of the
  * fragment.
  *
  * @author morin, chambon, cdehais
@@ -20,7 +23,10 @@ public class Rasterizer {
     this.shader = shader;
   }
 
-  /** Linear interpolation of a Fragment f on the edge defined by Fragment's v1 and v2 */
+  /**
+   * Linear interpolation of a Fragment f on the edge defined by Fragment's v1 and
+   * v2
+   */
   private void interpolate2(Fragment v1, Fragment v2, Fragment f) {
     int x1 = v1.getX();
     int y1 = v1.getY();
@@ -45,13 +51,16 @@ public class Rasterizer {
     }
   }
 
-  /** Swaps x and y coordinates of the fragment. Used by the Bresenham algorithm. */
+  /**
+   * Swaps x and y coordinates of the fragment. Used by the Bresenham algorithm.
+   */
   private static void swapXAndY(Fragment f) {
     f.setPosition(f.getY(), f.getX());
   }
 
   /**
-   * Rasterizes the edge between the projected vectors v1 and v2. Generates Fragment's and calls the
+   * Rasterizes the edge between the projected vectors v1 and v2. Generates
+   * Fragment's and calls the
    * Shader::shade() metho on each of them.
    */
   public void rasterizeEdge(Fragment v1, Fragment v2) {
@@ -178,7 +187,7 @@ public class Rasterizer {
   }
 
   /** Rasterizes the triangular face made of the Fragment v1, v2 and v3 */
-  public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3) {
+  public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3, boolean usePhong, Lighting lighting, Scene scene) {
 
     Matrix C = makeBarycentricCoordsMatrix(v1, v2, v3);
 
@@ -220,8 +229,9 @@ public class Rasterizer {
             for (int i = 0; i < numAttributes; i++) {
               p.setAttribute(
                   i, a * v1.getAttribute(i) + b * v2.getAttribute(i) + g * v3.getAttribute(i));
-              shader.shade(p);
             }
+            
+            shader.shade(p);
           }
         }
       }
