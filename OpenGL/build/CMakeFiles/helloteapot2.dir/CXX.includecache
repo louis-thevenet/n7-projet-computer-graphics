@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/gss2027/Documents/2A/Computer_Graphics/projet1/OpenGL/helloteapot2.cpp
+algorithm
+-
+cstdlib
+-
+GL/freeglut_std.h
+-
+GLUT/glut.h
+-
+OpenGL/gl.h
+-
+OpenGL/glu.h
+-
+windows.h
+-
+GL/freeglut.h
+-
+GL/gl.h
+-
+GL/glu.h
+-
+

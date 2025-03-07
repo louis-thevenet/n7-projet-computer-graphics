@@ -13,6 +13,7 @@ public class PerspectiveCorrectRasterizer extends Rasterizer {
   }
 
   /** Rasterizes the triangular face made of the Fragment v1, v2 and v3 */
+  @Override
   public void rasterizeFace(Fragment v1, Fragment v2, Fragment v3, boolean usePhong, Lighting lighting, Scene scene) {
     Matrix C = makeBarycentricCoordsMatrix(v1, v2, v3);
 

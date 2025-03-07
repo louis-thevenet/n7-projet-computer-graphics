@@ -3,8 +3,11 @@ import algebra.*;
 /** author: cdehais */
 public class Transformation {
 
+  // Passage au repère caméra
   Matrix worldToCamera;
+  // Retire la quatrième coordonnée
   Matrix projection;
+  // Passage au repère 2D
   Matrix calibration;
 
   public Transformation() {
