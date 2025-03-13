@@ -63,3 +63,6 @@ gluLookAt(
 2. Since we are making operations on state variables (matrix on the stack), if we set the camera after the second `glPushMatrix`, it will only be affected by the operations perfomed at its scope.
 
 3. In this case, the current matrix gets set to the indentity matrix, and the transformations performed on the teapots don't start from the camera's position anymore, the scene we see is different.
+
+# 4.4
+See `navigator.cpp`
