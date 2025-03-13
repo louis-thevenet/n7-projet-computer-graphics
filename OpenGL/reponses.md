@@ -1,3 +1,4 @@
+# Tp OpenGL Louis Thevenet & Guillaume Sablayrolles
 # 3.2.2 Display
 1. A solid teapot instead of a wire one. It seems to be missing lighting and texture.
 
@@ -25,7 +26,47 @@ void reshape(int width, int height)
 
 # 3.2.4 Keyboard
 
-1. See `helloteapot.cpp`
+```cpp
+bool wire = false;
+
+// function called everytime the windows is refreshed
+void display()
+{
+    // clear window
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // draw scene
+    if (wire) {
+        glutSolidTeapot(0.7);
+
+    }
+    else {
+        glutWireTeapot(0.7);
+    }
+
+    // flush drawing routines to the window
+    glFlush();
+}
+
+
+
+// Function called everytime a key is pressed
+void key(unsigned char key, int, int)
+{
+    switch(key)
+    {
+        case 'w':
+            wire=!wire;
+            break;
+        // the 'esc' key
+        case 27:
+        // the 'q' key
+        case 'q': exit(EXIT_SUCCESS); break;
+        default: break;
+    }
+    glutPostRedisplay();
+}
+```
 
 # 4.2
 
@@ -65,4 +106,88 @@ gluLookAt(
 3. In this case, the current matrix gets set to the indentity matrix, and the transformations performed on the teapots don't start from the camera's position anymore, the scene we see is different.
 
 # 4.4
-See `navigator.cpp`
+
+```cpp
+#define SPEED 0.1
+#define ANG_SPEED 0.5
+
+void move_camera(double x, double y, double z) {
+    glMatrixMode(GL_PROJECTION);
+    glTranslatef(x, y, z);
+    
+}
+void rotate_camera(double x, double y, double z) {
+    glMatrixMode(GL_PROJECTION);
+    glRotatef(ANG_SPEED, x, y, z);
+}
+
+void arrow_keys(int key, int, int) {
+    switch(key) {
+        case GLUT_KEY_LEFT:
+            rotate_camera(0.0, -1.0, 0.0);
+            break;
+
+        case GLUT_KEY_RIGHT:
+            rotate_camera(0.0, 1.0, 0.0);
+            break;
+
+        case GLUT_KEY_UP:
+            rotate_camera(-1.0, 0.0, 0.0);
+            break;
+
+        case GLUT_KEY_DOWN:
+            rotate_camera(1.0, 0.0, 0.0);
+            break;
+
+        default:
+            break;
+    }
+    glutPostRedisplay();
+
+}
+// Function called everytime a key is pressed
+void key(unsigned char key, int, int)
+{
+    switch(key)
+    {
+        case 27:
+            exit(EXIT_SUCCESS);
+            break;
+
+        case 'z':
+            move_camera(.0, .0, SPEED);
+            break;
+
+        case 's':
+            move_camera(0.,0., -SPEED);
+            break;
+
+        case 'q':
+            move_camera(SPEED,0., 0.);
+            break;
+
+        case 'd':
+            move_camera(-SPEED,0., 0.);
+            break;
+        case 'a':
+            move_camera(0.,-SPEED, 0.);
+            break;
+
+        case 'w':
+            move_camera(0.,SPEED, 0.);
+            break;
+
+        default:
+            break;
+    }
+    glutPostRedisplay();
+}
+
+int main(int argc, char* argv[])
+{
+    // [...]
+    // for the arrows
+    glutSpecialFunc(arrow_keys);
+    // [...]
+}
+```
