@@ -1,4 +1,4 @@
-# Introduction to OpenGL
+# OpenGL Lighting
 
 - Building
   - [Windows](#windows)
@@ -57,7 +57,7 @@ This step enables you to create the project file to load inside VS:
 
 ### Compile, build, execute
 
-- open `tp2.sln` inside VS either by double clicking on it or opening from inside VS
+- open `tp3.sln` inside VS either by double clicking on it or opening from inside VS
 
 - build the solution (**Build Solution** from the **Build menu**)
 
@@ -65,9 +65,9 @@ This step enables you to create the project file to load inside VS:
 
 - execute the code:  
 
-  - Select the project you want to run (e.g. `robot`), right click on it and select **Set as Startup Project**
+  - Select the project you want to run (e.g. `lumiere`), right click on it and select **Set as Startup Project** 
   
-  - On the menu bar, choose **Debug** --> **Start without debugging**.)
+  - On the menu bar, choose **Debug** --> **Start without debugging**.
 
 (see <https://docs.microsoft.com/en-us/cpp/build/vscpp-step-2-build?view=vs-2019> for how to build, execute, etc)
 
@@ -117,7 +117,7 @@ To compile and build the code you do
  ```shell
  mkdir build && cd build
  cmake ..
- make robot
+ make lumiere
  ```
 
 Also,
@@ -137,7 +137,7 @@ cleans everything.
 Execute the code:
 
 ```shell
-./robot
+./lumiere
 ```
 
 ### Editing the code
@@ -145,7 +145,7 @@ Execute the code:
 Edit the code as required and then
 
 ```shell
-make robot
+make lumiere
 ```
 
 > [!NOTE]
