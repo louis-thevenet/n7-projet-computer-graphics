@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/gss2027/Documents/2A/Computer_Graphics/projet1/OpenGL/TP2/robot.cpp
+cstdlib
+-
+iostream
+-
+cmath
+-
+algorithm
+-
+GL/freeglut_std.h
+-
+OpenGL/gl.h
+-
+OpenGL/glu.h
+-
+GLUT/glut.h
+-
+windows.h
+-
+GL/gl.h
+-
+GL/glu.h
+-
+GL/freeglut.h
+-
+
