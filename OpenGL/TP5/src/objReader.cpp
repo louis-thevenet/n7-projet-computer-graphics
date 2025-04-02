@@ -94,9 +94,9 @@ bool load(const std::string& filename, std::vector<point3d>& vertices, std::vect
             //*********************************************************************
             // Sum the normal of the face to each vertex normal (to be done for section 5.3)
             //*********************************************************************
-            normals[t.v1] += normal;
-            normals[t.v2] += normal;
-            normals[t.v3] += normal;
+            normals[t.v1] += normal * angleAtVertex(vertices[t.v1], vertices[t.v2],vertices[t.v3]);
+            normals[t.v2] += normal * angleAtVertex(vertices[t.v2], vertices[t.v1],vertices[t.v3]);
+            normals[t.v3] += normal * angleAtVertex(vertices[t.v3], vertices[t.v2],vertices[t.v1]);
 
 
 

@@ -80,23 +80,6 @@ void drawFaces(const std::vector<point3d>& vertices,
    {
        glShadeModel(GL_FLAT);
 
-
-
-   }
-   else
-   {
-       glShadeModel(GL_SMOOTH);
-
-
-   }
-
-    glDisable(GL_LIGHTING);
-
-
-
-       //**************************************************
-       // for each face
-       //**************************************************
     for (face t : mesh) {
            //**************************************************
            // Compute the normal to the face and then draw the
@@ -104,8 +87,8 @@ void drawFaces(const std::vector<point3d>& vertices,
            //**************************************************
 
         vec3d n = computeNormal(vertices[t.v1],vertices[t.v2], vertices[t.v3]);
+        
         glBegin(GL_TRIANGLES);
-
             glNormal3fv((float*) &n);
             glVertex3f(vertices[t.v1].x, vertices[t.v1].y, vertices[t.v1].z);
             glVertex3f(vertices[t.v2].x, vertices[t.v2].y, vertices[t.v2].z);
@@ -113,66 +96,115 @@ void drawFaces(const std::vector<point3d>& vertices,
         glEnd();
        }
 
-  // get the modelview matrix
-    GLfloat modelview[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, modelview);
+   }
+   else
+   {
+       glShadeModel(GL_SMOOTH);
 
 
-    for (face face: mesh) {
-        //**************************************************
-        // Compute the normal to the face and then draw the
-        // faces as GL_TRIANGLES assigning the proper normal
-        //**************************************************
-        glBegin( GL_TRIANGLES );
+    for (face t : mesh) {
+                auto n1 = vertexNormals[t.v1];
+        auto n2 = vertexNormals[t.v2];
+        auto n3 = vertexNormals[t.v3];
 
-            const auto n1 = vertexNormals[face.v1];
+        glBegin(GL_TRIANGLES);
 
-            // transform the normal to the eye space
-            vec3d n = vec3d(modelview[0] * n1.x + modelview[4] * n1.y + modelview[8] * n1.z,
-                            modelview[1] * n1.x + modelview[5] * n1.y + modelview[9] * n1.z,
-                            modelview[2] * n1.x + modelview[6] * n1.y + modelview[10] * n1.z);
+            glNormal3fv((float*) &n1);
+            glVertex3f(vertices[t.v1].x, vertices[t.v1].y, vertices[t.v1].z);
+            glNormal3fv((float*) &n2);
+            glVertex3f(vertices[t.v2].x, vertices[t.v2].y, vertices[t.v2].z);
+            glNormal3fv((float*) &n3);
+            glVertex3f(vertices[t.v3].x, vertices[t.v3].y, vertices[t.v3].z);
+        glEnd();
+       }
+        
 
-            n.normalize();
-            // change the values of the normal to be in the range [0, 1]
-            n = (n + 1) / 2;
+   }
 
-            glColor3f(n.x, n.y, n.z);
-            glVertex3fv( (float*) &vertices[face.v1] );
 
-                const auto n2 = vertexNormals[face.v2];
 
-                // transform the normal to the eye space
-                n = vec3d(modelview[0] * n2.x + modelview[4] * n2.y + modelview[8] * n2.z,
-                            modelview[1] * n2.x + modelview[5] * n2.y + modelview[9] * n2.z,
-                            modelview[2] * n2.x + modelview[6] * n2.y + modelview[10] * n2.z);
 
-                n.normalize();
-                // change the values of the normal to be in the range [0, 1]
-                n = (n + 1) / 2;
-                glColor3f(n.x, n.y, n.z);
+//        //**************************************************
+//        // for each face
+//        //**************************************************
+//     for (face t : mesh) {
+//            //**************************************************
+//            // Compute the normal to the face and then draw the
+//            // faces as GL_TRIANGLES assigning the proper normal
+//            //**************************************************
 
-            glVertex3fv( (float*) &vertices[face.v2] );
+//         vec3d n = computeNormal(vertices[t.v1],vertices[t.v2], vertices[t.v3]);
+//         glBegin(GL_TRIANGLES);
 
-            const auto n3 = vertexNormals[face.v3];
+//             glNormal3fv((float*) &n);
+//             glVertex3f(vertices[t.v1].x, vertices[t.v1].y, vertices[t.v1].z);
+//             glVertex3f(vertices[t.v2].x, vertices[t.v2].y, vertices[t.v2].z);
+//             glVertex3f(vertices[t.v3].x, vertices[t.v3].y, vertices[t.v3].z);
+//         glEnd();
+//        }
 
-                // transform the normal to the eye space
-                n = vec3d(modelview[0] * n3.x + modelview[4] * n3.y + modelview[8] * n3.z,
-                            modelview[1] * n3.x + modelview[5] * n3.y + modelview[9] * n3.z,
-                            modelview[2] * n3.x + modelview[6] * n3.y + modelview[10] * n3.z);
-                n = (n + 1) / 2;
-                glColor3f(n.x, n.y, n.z);
+//   // get the modelview matrix
+//     GLfloat modelview[16];
+//     glGetFloatv(GL_MODELVIEW_MATRIX, modelview);
 
-            glVertex3fv( (float*) &vertices[face.v3] );
-        glEnd( );
-    }
+
+//     for (face face: mesh) {
+//         //**************************************************
+//         // Compute the normal to the face and then draw the
+//         // faces as GL_TRIANGLES assigning the proper normal
+//         //**************************************************
+//         glBegin( GL_TRIANGLES );
+
+//             const auto n1 = vertexNormals[face.v1];
+
+//             // transform the normal to the eye space
+//             vec3d n = vec3d(modelview[0] * n1.x + modelview[4] * n1.y + modelview[8] * n1.z,
+//                             modelview[1] * n1.x + modelview[5] * n1.y + modelview[9] * n1.z,
+//                             modelview[2] * n1.x + modelview[6] * n1.y + modelview[10] * n1.z);
+
+//             n.normalize();
+//             // change the values of the normal to be in the range [0, 1]
+//             n = (n + 1) / 2;
+
+//             glColor3f(n.x, n.y, n.z);
+//             glVertex3fv( (float*) &vertices[face.v1] );
+
+//                 const auto n2 = vertexNormals[face.v2];
+
+//                 // transform the normal to the eye space
+//                 n = vec3d(modelview[0] * n2.x + modelview[4] * n2.y + modelview[8] * n2.z,
+//                             modelview[1] * n2.x + modelview[5] * n2.y + modelview[9] * n2.z,
+//                             modelview[2] * n2.x + modelview[6] * n2.y + modelview[10] * n2.z);
+
+//                 n.normalize();
+//                 // change the values of the normal to be in the range [0, 1]
+//                 n = (n + 1) / 2;
+//                 glColor3f(n.x, n.y, n.z);
+
+//             glVertex3fv( (float*) &vertices[face.v2] );
+
+//             const auto n3 = vertexNormals[face.v3];
+
+//                 // transform the normal to the eye space
+//                 n = vec3d(modelview[0] * n3.x + modelview[4] * n3.y + modelview[8] * n3.z,
+//                             modelview[1] * n3.x + modelview[5] * n3.y + modelview[9] * n3.z,
+//                             modelview[2] * n3.x + modelview[6] * n3.y + modelview[10] * n3.z);
+//                 n.normalize();
+//                 n = (n + 1) / 2;
+//                 glColor3f(n.x, n.y, n.z);
+
+//             glVertex3fv( (float*) &vertices[face.v3] );
+//         glEnd( );
+//     }
   
-     glEnable( GL_LIGHTING );
+    //  glEnable( GL_LIGHTING );
 
 }
 
 
 
 /**
+
  * Draw the model using the vertex indices
  *
  * @param vertices The vertices
@@ -207,18 +239,18 @@ void drawArrayFaces(const std::vector<point3d>& vertices,
     //****************************************
     // Normal pointer to normal array
     //****************************************
-    glNormalPointer(GL_FLOAT, 0, &vertexNormals);
+    glNormalPointer(GL_FLOAT, 0, (float*)&vertexNormals[0]);
 
     //****************************************
     // Vertex pointer to Vertex array
     //****************************************
-    glVertexPointer(3,GL_FLOAT, 0, &vertices);
+    glVertexPointer(3,GL_FLOAT, 0, (float*)&vertices[0]);
 
 
     //****************************************
     // Draw the faces
     //****************************************
-    glDrawElements(GL_TRIANGLES, vertices.size()/3, GL_FLOAT, &indices);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size())*VERTICES_PER_TRIANGLE, GL_UNSIGNED_INT, (idxtype *)&indices[0]);
 
     //****************************************
     // Disable vertex arrays

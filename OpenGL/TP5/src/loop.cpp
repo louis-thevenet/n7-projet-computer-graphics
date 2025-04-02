@@ -5,6 +5,7 @@
  */
 
 #include "loop.hpp"
+#include "core.hpp"
 #include "geometry.hpp"
 
 #include <cassert>
@@ -39,19 +40,28 @@ void loopSubdivision(const std::vector<point3d>& origVert, //!< the original ver
     //*********************************************************************
     // for each face
     //*********************************************************************
-
+    for (face f : origMesh)
     {
         //*********************************************************************
         // get the indices of the triangle vertices
         //*********************************************************************
-
-
+        idxtype i1 = f.v1;
+        idxtype i2 = f.v2;
+        idxtype i3 = f.v3;
 
 
         //*********************************************************************
         // for each edge get the index of the vertex of the midpoint using getNewVertex
         //*********************************************************************
 
+        edge e1(i1,i2);
+        idxtype a = getNewVertex(e1, destVert, destMesh, newVertices);
+
+        edge e2(i2,i3);
+        idxtype b = getNewVertex(e2, destVert, destMesh, newVertices);
+
+        edge e3(i1,i3);
+        idxtype c = getNewVertex(e3, destVert, destMesh, newVertices);
 
 
 
@@ -72,6 +82,10 @@ void loopSubdivision(const std::vector<point3d>& origVert, //!< the original ver
         // hence v1-a-c, a-b-c and so on
         //*********************************************************************
 
+        destMesh.push_back(*new face(i1, a,c));
+        destMesh.push_back(*new face(a, i2,b));
+        destMesh.push_back(*new face(b, i3,c));
+        destMesh.push_back(*new face(a, b,c));
 
 
 
@@ -181,17 +195,17 @@ idxtype getNewVertex(const edge& e,
     //*********************************************************************
     // if the egde is NOT contained in the new vertex list (see EdgeList.contains() method)
     //*********************************************************************
-
+    if (!newVertList.contains(e))
     {
         //*********************************************************************
         // generate new index (vertex.size)
         //*********************************************************************
-
+        int new_index = vertList.size();
 
         //*********************************************************************
         // add the edge and index to the newVertList
         //*********************************************************************
-
+        newVertList.add(e, new_index);
 
         // generate new vertex
         point3d nvert;        //!< this will contain the new vertex
@@ -202,7 +216,7 @@ idxtype getNewVertex(const edge& e,
         // check if it is a boundary edge, ie check if there is another triangle
         // sharing this edge and if so get the index of its "opposite" vertex
         //*********************************************************************
-
+        if (!isBoundaryEdge(e, mesh, oppV1, oppV2))
         {
             // if it is not a boundary edge create the new vertex
 
@@ -214,35 +228,38 @@ idxtype getNewVertex(const edge& e,
             //
             // REMEMBER THAT IN THE CODE OPPV1 AND OPPV2 ARE INDICES, NOT VERTICES!!!
             //*********************************************************************
-
+            nvert = 3.0/8.0 * (vertList[e.first] + vertList[e.second]) + 1.0/8.0 * (vertList[oppV1] + vertList[oppV2]) ;
 
         }
-//         else
+        else
         {
             //*********************************************************************
             // otherwise it is a boundary edge then the vertex is the linear combination of the
             // two extrema
             //*********************************************************************
+            nvert = (vertList[e.first] + vertList[e.second])/2.0;
 
         }
         //*********************************************************************
         // append the new vertex to the list of vertices
         //*********************************************************************
-
+        vertList.push_back(nvert);
 
         //*********************************************************************
         // return the index of the new vertex
         //*********************************************************************
+        return new_index;
 
     }
-//     else
+    else
     // else we don't need to do anything, just return the associated index of the
     // already existing vertex
     {
         //*********************************************************************
         // get and return the index of the vertex
         //*********************************************************************
-
+        return newVertList.getIndex(e);
+        
     }
 
     // this is just to avoid compilation errors at the beginning
